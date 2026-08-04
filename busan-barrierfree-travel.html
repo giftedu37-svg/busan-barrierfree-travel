@@ -26,6 +26,7 @@
     footer { padding:30px 0; color:#71909a; font-size:12px; } .sources { margin-top:7px; line-height:1.8; } .sources a { margin-right:10px; }
     @media(max-width:800px){ .controls,.layout { grid-template-columns:1fr; } .controls { gap:10px; } .go { width:100%; } .hero { padding-top:48px; } h1 { letter-spacing:-2px; } main { margin-top:-24px; } aside { position:static; } .card { grid-template-columns:22px 1fr; } .score { grid-column:2; text-align:left; } .score strong { display:inline; margin-right:5px; } .tag { display:none; } }
   </style>
+  <style>.route-panel-hidden{display:none!important;}</style>
 </head>
 <body>
   <header><div class="shell nav"><div class="brand">모두의 <span>부산길</span></div><div class="tag">Barrier-free Busan Travel Planner</div></div></header>
@@ -38,7 +39,7 @@
       <button class="go" id="refresh">추천 업데이트</button>
     </section>
     <div class="summary"><h2>여행지 추천</h2><div class="weather" id="weatherText">☀ 맑음 · 이동거리 가중치 ×1.0</div></div>
-    <section class="layout"><div class="places" id="places"></div><aside class="panel" id="routePanel"></aside></section>
+    <section class="layout"><div class="places" id="places"></div><aside class="panel route-panel-hidden" id="routePanel"></aside></section>
     <div class="notice">안내: 이 화면은 서비스 시연용 프로토타입입니다. 실제 운영에서는 기상청 단기예보, 부산버스정보시스템, 부산교통공사 편의시설 API를 주기적으로 갱신하고, 시설 고장·운행 변경 여부를 출발 직전에 다시 확인해야 합니다.</div>
   </main>
   <footer class="shell">데이터 출처(연동 대상)<div class="sources"><a href="https://access.visitkorea.or.kr/main/main.do" target="_blank">열린관광 모두의 여행</a><a href="https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310" target="_blank">Visit Busan</a><a href="https://www.data.go.kr/data/15158993/openapi.do" target="_blank">부산교통공사 편의시설 API</a><a href="https://www.data.go.kr/data/15092750/openapi.do" target="_blank">부산버스정보 API</a><a href="https://apihub.kma.go.kr/" target="_blank">기상청 API 허브</a><a href="https://duribal.co.kr/" target="_blank">두리발</a></div></footer>
@@ -83,6 +84,7 @@
       $('places').innerHTML=list.map(p=>`<article class="card ${selected.has(p.name)?'selected':''}"><input class="check" type="checkbox" aria-label="${p.name} 선택" ${selected.has(p.name)?'checked':''} onchange="toggle('${p.name}')"><div><div><span class="card-title">${p.name}</span><span class="type">${p.type}</span></div><div class="meta">${origin} 기준 ${p.displayDistance}km · 접근성 확인 완료</div><div>${p.labels.map(x=>`<span class="facility">${x}</span>`).join('')}</div><div class="links"><a href="${p.source}" target="_blank">관광지 정보 ↗</a><a href="${p.map}" target="_blank">네이버 지도 ↗</a></div></div><div class="score"><strong>${score(p,sev,p.displayDistance)}</strong><small>추천도 / 100</small></div></article>`).join('');
       const topScore=list.length ? score(list[0],sev,list[0].displayDistance) : 0;
       list.forEach((p,i)=>{ const card=$('places').children[i]; if(card){ const current=score(p,sev,p.displayDistance); const meta=card.querySelector('.meta'); if(meta) meta.textContent=`${origin} 기준 ${p.displayDistance}km · 접근성 확인 완료`; const scoreBox=card.querySelector('.score'); if(scoreBox){ const rel=relativeRating(current,topScore); scoreBox.innerHTML=`<strong aria-label="상대 추천도 ${rel}점">${starMarkup(rel)}</strong><small>${rel.toFixed(1)} / 5.0</small>`; } }});
+      $('routePanel').classList.toggle('route-panel-hidden', selected.size===0);
       route(sev,origin);
     }
     function route(sev){ const chosen=places.filter(p=>selected.has(p.name)); if(!chosen.length){$('routePanel').innerHTML='<div class="route-title"><h3>선택한 여행 코스</h3></div><div class="empty">왼쪽에서 여행지를 선택하세요.<br>추천도는 날씨가 나쁠수록 가까운 장소와 실내 장소에 더 높은 비중을 둡니다.</div>';return;} const p=chosen[0], cost=Math.min(99,Math.round(100-score(p,sev)+12)); const mode=sev>=.7&&p.reserve?'두리발 대체 경로':'저상버스·도시철도'; $('routePanel').innerHTML=`<div class="route-title"><h3>선택한 여행 코스</h3><span class="route-score">경로 추천 ${100-cost}점</span></div><div class="route"><div class="step"><b>출발 · ${$('origin').value}</b>엘리베이터/저상버스 탑승 가능 여부를 출발 전 확인하세요.</div>${p.route.map((x,i)=>`<div class="step"><b>${i===0?mode:x}</b>${x}</div>`).join('')}<div class="step"><b>도착 · ${p.name}</b>예상 이동 ${Math.round(p.dist*4+10)}분 · 보행 약 ${Math.round(120+p.dist*25)}m</div></div><div class="reservation">${p.reserve?`<b>예약·대체 이동</b><br>비·강풍 시 긴 야외 환승 대신 <a href="https://duribal.co.kr/" target="_blank">두리발 예약/이용 안내 ↗</a>를 이용하세요.`:'<b>예약 필요 없음</b><br>도시철도 및 보행 연결 경로입니다. 시설 운행 상태를 확인하세요.'}</div>`; }
