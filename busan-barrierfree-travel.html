@@ -96,6 +96,15 @@
       const steps=panel.querySelectorAll('.step'); const last=steps[steps.length-1];
       if(last) last.innerHTML=`<b>도착 · ${p.name}</b>예상 이동 ${Math.round(d*4+10)}분 · 보행 약 ${Math.round(120+d*25)}m`;
     }
+    // 최종 경로 렌더러: 선택 즉시 출발지·날씨·거리 기준으로 전체 이동 안내를 다시 그립니다.
+    function route(sev, origin){
+      const chosen=places.filter(p=>selected.has(p.name));
+      const panel=$('routePanel');
+      if(!chosen.length){ panel.innerHTML='<div class="route-title"><h3>선택한 여행 코스</h3></div><div class="empty">왼쪽에서 여행지를 선택하면 출발지 기준 이동 방법이 표시됩니다.</div>'; return; }
+      const p=chosen[0], d=distanceFor(p,origin), routeScore=Math.max(0,Math.min(100,score(p,sev,d)-12));
+      const mode=sev>=.7&&p.reserve?'두리발 대체 경로':'저상버스·도시철도';
+      panel.innerHTML=`<div class="route-title"><h3>선택한 여행 코스</h3><span class="route-score">경로 추천 ${routeScore}점</span></div><div class="route"><div class="step"><b>출발 · ${origin}</b>엘리베이터·저상버스 탑승 가능 여부를 출발 전 확인하세요.</div>${p.route.map((x,i)=>`<div class="step"><b>${i===0?mode:'이동 안내'}</b>${x}</div>`).join('')}<div class="step"><b>도착 · ${p.name}</b>예상 이동 ${Math.round(d*4+10)}분 · 보행 약 ${Math.round(120+d*25)}m</div></div><div class="reservation">${p.reserve?'<b>예약·대체 이동</b><br>날씨가 나쁠 때는 <a href="https://duribal.co.kr/" target="_blank">두리발 예약/이용 안내 ↗</a>를 확인하세요.':'<b>예약 필요 없음</b><br>도시철도·버스 연결 경로입니다. 운행 상태를 출발 전에 확인하세요.'}</div>`;
+    }
     function toggle(name){ selected.has(name)?selected.delete(name):selected.add(name); render(); } window.toggle=toggle;
     ['weatherSelect','need','origin'].forEach(id=>$(id).addEventListener('change',render)); $('refresh').addEventListener('click',render); render();
   </script>
