@@ -26,9 +26,77 @@
     footer { padding:30px 0; color:#71909a; font-size:12px; } .sources { margin-top:7px; line-height:1.8; } .sources a { margin-right:10px; }
     @media(max-width:800px){ .controls,.layout { grid-template-columns:1fr; } .controls { gap:10px; } .go { width:100%; } .hero { padding-top:48px; } h1 { letter-spacing:-2px; } main { margin-top:-24px; } aside { position:static; } .card { grid-template-columns:22px 1fr; } .score { grid-column:2; text-align:left; } .score strong { display:inline; margin-right:5px; } .tag { display:none; } }
   </style>
-  <style>.route-panel-hidden{display:none!important;}</style>
+  <style>
+    :root {
+      --navy:#16445A; --ink:#16445A; --sky:#DDF7FA; --mint:#45B99A;
+      --coral:#FF806B; --sand:#FFF1DC; --line:#C9E8EC; --muted:#557584;
+      --ocean:#16B8C4; --white:#FFFFFF;
+    }
+    * { box-sizing:border-box; }
+    body { background:#F7FEFF; color:var(--ink); font-size:16px; }
+    header { background:var(--white); color:var(--ink); border-bottom:1px solid var(--line); box-shadow:0 3px 14px rgba(22,68,90,.08); }
+    .nav { min-height:74px; }
+    .brand { color:var(--ink); font-size:22px; }
+    .brand span { color:var(--ocean); }
+    .tag { color:#557584; }
+    .hero { background:var(--sky); color:var(--ink); padding:70px 0 90px; }
+    .hero:before { content:''; position:absolute; left:-5%; right:-5%; bottom:-48px; height:92px; background:var(--white); border-radius:50% 50% 0 0/100% 100% 0 0; }
+    .hero:after { width:250px; height:250px; right:7%; bottom:-105px; background:var(--sand); opacity:1; border:10px solid #FFE5BC; }
+    .eyebrow { color:#078D9B; }
+    h1 { color:var(--ink); }
+    .hero p { color:#315F70; }
+    .badges span { border-color:#8ADDE2; background:var(--white); color:#176B79; }
+    main { margin-top:-30px; }
+    .panel,.card { background:var(--white); border-color:var(--line); box-shadow:0 10px 28px rgba(22,68,90,.10); }
+    label { color:#3D6878; }
+    select,.field { border-color:#A9DDE2; color:var(--ink); background:var(--white); }
+    select:focus,.field:focus,.check:focus,.go:focus { outline:3px solid rgba(22,184,196,.35); outline-offset:2px; }
+    .go { background:var(--coral); border-radius:14px; box-shadow:0 5px 12px rgba(255,128,107,.25); }
+    .go:hover { background:#F36D59; }
+    .weather { color:#08717C; background:#DDF7FA; }
+    .card { border-radius:18px; }
+    .card:hover { border-color:var(--ocean); box-shadow:0 12px 25px rgba(22,184,196,.14); }
+    .card.selected { border-color:var(--mint); background:#F0FCF8; }
+    .facility { color:#19785F; background:#E2F7F0; }
+    .links { color:#087E8B; }
+    .score strong,.route-score { color:var(--coral); }
+    .stars { background:linear-gradient(90deg,var(--coral) var(--rating-fill),#D5E8EA var(--rating-fill)); -webkit-background-clip:text; background-clip:text; }
+    .step:before { background:var(--mint); border-color:#DDF7FA; }
+    .reservation { background:var(--sand); }
+    .notice { background:var(--sky); border-left-color:var(--ocean); color:#315F70; }
+    footer { color:#557584; }
+    @media(max-width:800px){ .shell { padding-left:18px; padding-right:18px; } .hero { padding-top:48px; padding-bottom:72px; } h1 { font-size:clamp(30px,9vw,46px); } .controls { padding:18px; } .card { padding:17px; } }
+  </style>
+  <style>
+    :root{--navy:#0A74B0;--ink:#2D3748;--sky:#E6F4F9;--mint:#4ECDC4;--coral:#FF8A3C;--sand:#FFF8ED;--line:#C7E3EC;--muted:#52697A;--purple:#A897D9;--ivory:#FAFCFF;}
+    body{background:var(--ivory);color:var(--ink);}
+    header{background:linear-gradient(135deg,#0A74B0,#159CC2);color:#fff;border:0;box-shadow:0 8px 22px rgba(10,116,176,.18);}
+    .nav{min-height:76px}.brand{color:#fff}.brand span{color:#FFF8ED}.tag{color:#E6F4F9}
+    .hero{background:linear-gradient(135deg,#E6F4F9 0%,#C8EFF2 52%,#FFF8ED 100%);color:var(--ink);padding:78px 0 108px;}
+    .hero:before{content:'';position:absolute;left:-5%;right:-5%;bottom:-62px;height:120px;background:var(--ivory);border-radius:50% 50% 0 0/100% 100% 0 0;box-shadow:0 -10px 24px rgba(10,116,176,.06)}
+    .hero:after{display:none}
+    .eyebrow{color:#075A88}.hero p{color:#2D5568}.badges span{background:rgba(255,255,255,.84);border:1px solid #A8DCE7;color:#075A88;box-shadow:0 4px 10px rgba(10,116,176,.08)}
+    h1{color:#16445A;text-shadow:0 2px 0 rgba(255,255,255,.7)}
+    .panel,.card{background:rgba(255,255,255,.96);border-color:var(--line);box-shadow:0 8px 0 rgba(10,116,176,.05),0 16px 30px rgba(45,55,72,.10)}
+    .panel{border-radius:28px}.controls{border-radius:28px}.layout{gap:26px}
+    select,.field{border-color:#A8DCE7;border-radius:16px;background:#fff;box-shadow:inset 0 2px 6px rgba(10,116,176,.06)}
+    select:focus,.field:focus,.check:focus,.go:focus{outline:3px solid rgba(78,205,196,.55);outline-offset:3px}
+    .go{background:var(--coral);border-radius:18px;box-shadow:0 6px 0 #D96527,0 10px 18px rgba(255,138,60,.22)}.go:hover{background:#F17B2C;transform:translateY(-1px)}
+    .weather{color:#075A88;background:linear-gradient(135deg,#E6F4F9,#D5F5F0);border:1px solid #A8DCE7}
+    .card{border-radius:24px;padding:21px;position:relative;overflow:hidden;background:linear-gradient(145deg,#fff 0%,#F8FDFF 72%,#FFF8ED 100%);transition:transform .22s,box-shadow .22s,border-color .22s}.card:before{content:'⌁';position:absolute;right:18px;top:-12px;font-size:84px;color:rgba(78,205,196,.11);line-height:1}.card:hover{border-color:var(--navy);transform:translateY(-4px);box-shadow:0 9px 0 rgba(10,116,176,.07),0 22px 34px rgba(10,116,176,.16)}.card.selected{border:2px solid var(--mint);background:linear-gradient(145deg,#F0FFFC,#E6F4F9)}
+    .facility{border-radius:999px;color:#075A88;background:#DDF7F3;border:1px solid #A7E5DE;padding:4px 9px}.links{color:#075A88}.score strong,.route-score{color:#D96527}.stars{background:linear-gradient(90deg,var(--coral) var(--rating-fill),#D9E5E8 var(--rating-fill));-webkit-background-clip:text;background-clip:text}
+    aside{border-radius:28px}.route{border-top-color:var(--line)}.step{border-bottom-color:#E7F1F4}.step:before{background:var(--mint);border-color:#DDF7F3}.reservation{background:linear-gradient(135deg,#FFF8ED,#FFE9D0);border:1px solid #FFD4A8;border-radius:18px}.notice{background:linear-gradient(135deg,#E6F4F9,#F1EEFA);border-left:0;border-radius:20px;color:#31566A;box-shadow:inset 5px 0 var(--purple)}
+    footer{color:#52697A}.shell{max-width:1180px}
+    @media(max-width:800px){.hero{padding:52px 0 84px}.controls{padding:18px;border-radius:22px}.panel,.card,aside{border-radius:22px}.card{padding:18px}.go{box-shadow:0 4px 0 #D96527,0 8px 14px rgba(255,138,60,.2)}}
+  </style>
+  <style>
+    .hidden-sticker{position:fixed;right:12px;bottom:10px;z-index:5;font-size:19px;letter-spacing:-5px;opacity:.72;filter:drop-shadow(0 2px 3px rgba(45,55,72,.18));pointer-events:none;user-select:none;transform:rotate(-4deg)}
+    .hidden-sticker span{display:inline-block;background:rgba(255,255,255,.8);border-radius:50%;padding:3px 5px}
+    @media(max-width:800px){.hidden-sticker{right:7px;bottom:7px;font-size:16px}}
+  </style>
 </head>
 <body>
+  <div class="hidden-sticker" aria-hidden="true" title="숨은 친구들"><span>🐒</span><span>🍌</span></div>
   <header><div class="shell nav"><div class="brand">모두의 <span>부산길</span></div><div class="tag">Barrier-free Busan Travel Planner</div></div></header>
   <section class="hero"><div class="shell"><div class="eyebrow">ACCESSIBLE TRAVEL, BUSAN</div><h1>오늘의 날씨와<br>나의 이동 방식에 맞춘 부산 여행</h1><p>확인된 장애인 편의시설을 갖춘 장소만 추천합니다. 장소를 고르면 접근 가능한 대중교통과 두리발 대체 경로까지 한 번에 확인할 수 있어요.</p><div class="badges"><span>♿ 편의시설 확인</span><span>☂ 날씨 반영</span><span>⌁ 저상버스·도시철도</span></div></div></section>
   <main class="shell">
@@ -51,6 +119,12 @@
       { name:'태종대 유원지', type:'관광', dist:14.6, rating:4.6, indoor:0.25, source:'https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310', map:'https://map.naver.com/p/search/태종대%20유원지', facilities:['toilet','parking'], labels:['휠체어 대여','장애인 화장실','다누비열차'], route:['도시철도 1호선 남포역','저상버스 8번 환승','태종대 입구 하차'], reserve:true },
       { name:'더베이101', type:'식사·야경', dist:1.7, rating:4.4, indoor:0.65, source:'https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310', map:'https://map.naver.com/p/search/더베이101', facilities:['toilet','elevator','parking'], labels:['엘리베이터','장애인 화장실','장애인 주차'], route:['도시철도 2호선 동백역','보행 380m','더베이101 도착'], reserve:false }
     ];
+    // 관광지 정보 링크는 각 장소의 공식 사이트로 연결합니다.
+    places[0].source='https://www.visitsealife.com/busan/';
+    places[1].source='https://www.busan.go.kr/';
+    places[2].source='https://www.sci.or.kr/';
+    places[3].source='https://www.bisco.or.kr/taejongdae/';
+    places[4].source='https://www.thebay101yacht.com/';
     let selected = new Set();
     const $ = id => document.getElementById(id);
     // 기준 거리에서 출발역별 실제 권역 차이를 반영한 보정값(km)
@@ -65,12 +139,16 @@
     function distanceFor(p, origin) { const i=places.indexOf(p); return measuredDistances[i]?.[origin] ?? p.dist; }
     function score(p, severity, distance) {
       const d=distance ?? p.dist;
-      const distanceScore=Math.max(0,1-(d/18)*(1+1.5*severity));
       const ratingScore=(p.rating/5)*25;
       // 날씨는 전체 점수를 낮추지 않고 거리 항목의 영향력만 증폭합니다.
       const indoorScore=p.indoor*20;
-      const distanceWeight=distanceScore*35;
-      return Math.round(20 + ratingScore + distanceWeight + indoorScore);
+      // 날씨가 나쁠수록 실제 이동거리의 감점을 선형으로 크게 적용합니다.
+      // 제곱 없이 선형으로 계산하되, 거리 감점 계수를 크게 적용합니다.
+      const baseScore=45 + ratingScore + indoorScore;
+      // 거리 감점만 거리값에 정비례시킵니다. 2배 거리면 감점률도 2배입니다.
+      // 날씨는 이 거리 감점 계산에 개입하지 않습니다.
+      const distanceReduction=Math.min(0.8, d*0.02);
+      return Math.max(0, Math.min(100, Math.round(baseScore*(1-distanceReduction))));
     }
     function relativeRating(value, top) { return top ? Math.max(0, Math.min(5, +(value/top*5).toFixed(1))) : 0; }
     function starMarkup(rating) { const fill=Math.max(0,Math.min(100,rating/5*100)); return `<span class="stars" style="--rating-fill:${fill}%" aria-hidden="true">★★★★★</span>`; }
@@ -118,6 +196,16 @@
       render();
     });
     ['weatherSelect','need','origin'].forEach(id=>$(id).addEventListener('change',render)); $('refresh').addEventListener('click',render); render();
+  </script>
+  <script>
+    document.title = '휠웨이 부산 | 무장애 해양관광 안내';
+    const brand = document.querySelector('.brand');
+    if (brand) brand.textContent = '휠웨이 부산';
+  </script>
+  <style>.site-url{margin-top:7px;font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere}.site-url a{color:#075A88}</style>
+  <script>
+    const siteObserver=new MutationObserver(()=>document.querySelectorAll('#places .card').forEach(card=>{if(card.querySelector('.site-url'))return;const link=card.querySelector('.links a[href]');if(!link)return;const row=document.createElement('div');row.className='site-url';row.innerHTML='사이트: <a href="'+link.href+'" target="_blank" rel="noopener">'+link.href+'</a>';card.querySelector('.links')?.appendChild(row);}));
+    siteObserver.observe(document.getElementById('places'),{childList:true});
   </script>
 </body>
 </html>
