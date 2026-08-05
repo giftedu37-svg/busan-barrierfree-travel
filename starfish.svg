@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">불가사리 일러스트</title>
+  <desc id="desc">따뜻한 주황색의 다섯 팔 불가사리</desc>
+  <circle cx="80" cy="80" r="76" fill="#FFF1DC"/>
+  <path d="M80 18c7 0 11 29 17 34 7 5 34-7 38 0 4 7-19 24-19 33 0 9 24 26 20 33-4 7-31-5-38 0-7 5-10 34-18 34s-11-29-18-34c-7-5-34 7-38 0-4-7 20-24 20-33 0-9-24-26-20-33 4-7 31 5 38 0 7-5 11-34 18-34z" fill="#FF806B" stroke="#16445A" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="67" cy="72" r="5" fill="#16445A"/><circle cx="93" cy="72" r="5" fill="#16445A"/>
+  <path d="M68 91c8 7 16 7 24 0" fill="none" stroke="#16445A" stroke-width="4" stroke-linecap="round"/>
+</svg>
