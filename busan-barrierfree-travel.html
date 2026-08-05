@@ -113,7 +113,7 @@
   <footer class="shell">데이터 출처(연동 대상)<div class="sources"><a href="https://access.visitkorea.or.kr/main/main.do" target="_blank">열린관광 모두의 여행</a><a href="https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310" target="_blank">Visit Busan</a><a href="https://www.data.go.kr/data/15158993/openapi.do" target="_blank">부산교통공사 편의시설 API</a><a href="https://www.data.go.kr/data/15092750/openapi.do" target="_blank">부산버스정보 API</a><a href="https://apihub.kma.go.kr/" target="_blank">기상청 API 허브</a><a href="https://duribal.co.kr/" target="_blank">두리발</a></div></footer>
   <script>
     const places = [
-      { name:'해운대 아쿠아리움 · 동백섬', type:'관광', dist:1.2, rating:4.7, indoor:0.7, source:'https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310', map:'https://map.naver.com/p/search/해운대%20아쿠아리움', facilities:['toilet','elevator','parking'], labels:['엘리베이터','장애인 화장실','점자 유도'], route:['도시철도 2호선 해운대역','구남로 보행 450m','아쿠아리움 입장'], reserve:false },
+      { name:'해운대 아쿠아리움 · 동백섬', type:'관광', dist:1.2, rating:4.7, indoor:0.7, source:'https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310', map:'https://map.naver.com/p/search/해운대%20아쿠아리움', facilities:['toilet','elevator','parking'], labels:['엘리베이터','장애인 화장실','점자 유도'], route:['도시철도 2호선 해운대역','구남로 보행 450m','아쿠아리움 입장'], reserve:false, reel:'https://www.instagram.com/reel/DTsWOi1AbWQ/', reelTitle:'해운대 아쿠아리움·동백섬 릴스 보기' },
       { name:'송도 해수욕장 · 스카이워크', type:'관광', dist:10.8, rating:4.6, indoor:0.1, source:'https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310', map:'https://map.naver.com/p/search/송도%20스카이워크', facilities:['toilet','parking'], labels:['완만한 경사로','장애인 화장실','장애인 주차'], route:['도시철도 1호선 자갈치역','저상버스 7번 환승','송도해수욕장 정류장 하차'], reserve:true },
       { name:'국립수산과학관', type:'실내 전시', dist:12.4, rating:4.5, indoor:1, source:'https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310', map:'https://map.naver.com/p/search/국립수산과학관', facilities:['toilet','parking','elevator'], labels:['장애인 화장실','장애인 주차','실내 전시'], route:['해운대역 → 오시리아역 이동','저상버스 1001번 환승','수산과학관 정류장 하차'], reserve:true },
       { name:'태종대 유원지', type:'관광', dist:14.6, rating:4.6, indoor:0.25, source:'https://www.visitbusan.net/index.do?menuCd=DOM_000000202002001000&uc_seq=310', map:'https://map.naver.com/p/search/태종대%20유원지', facilities:['toilet','parking'], labels:['휠체어 대여','장애인 화장실','다누비열차'], route:['도시철도 1호선 남포역','저상버스 8번 환승','태종대 입구 하차'], reserve:true },
@@ -159,7 +159,7 @@
       const origin=$('origin').value;
       const list=places.filter(p=>need==='all'||p.facilities.includes(need)).sort((a,b)=>score(b,sev,distanceFor(b,origin))-score(a,sev,distanceFor(a,origin)));
       list.forEach(p=>p.displayDistance=distanceFor(p,origin));
-      $('places').innerHTML=list.map(p=>`<article class="card ${selected.has(p.name)?'selected':''}"><input class="check" type="checkbox" aria-label="${p.name} 선택" ${selected.has(p.name)?'checked':''} onchange="toggle('${p.name}')"><div><div><span class="card-title">${p.name}</span><span class="type">${p.type}</span></div><div class="meta">${origin} 기준 ${p.displayDistance}km · 접근성 확인 완료</div><div>${p.labels.map(x=>`<span class="facility">${x}</span>`).join('')}</div><div class="links"><a href="${p.source}" target="_blank">관광지 정보 ↗</a><a href="${p.map}" target="_blank">네이버 지도 ↗</a></div></div><div class="score"><strong>${score(p,sev,p.displayDistance)}</strong><small>추천도 / 100</small></div></article>`).join('');
+      $('places').innerHTML=list.map(p=>`<article class="card ${selected.has(p.name)?'selected':''}"><input class="check" type="checkbox" aria-label="${p.name} 선택" ${selected.has(p.name)?'checked':''} onchange="toggle('${p.name}')"><div><div><span class="card-title">${p.name}</span><span class="type">${p.type}</span></div><div class="meta">${origin} 기준 ${p.displayDistance}km · 접근성 확인 완료</div><div>${p.labels.map(x=>`<span class="facility">${x}</span>`).join('')}</div>${p.reel?`<a class="place-reel" href="${p.reel}" target="_blank" rel="noopener" aria-label="${p.reelTitle}"><span class="reel-images"><img src="haeundae-dongbaek-reel.png" alt="해운대해수욕장 동백섬 영상 썸네일"><img src="sealife-busan.png" alt="씨라이프 부산 아쿠아리움 영상 썸네일"></span><span><b>🎬 해운대 아쿠아리움 · 동백섬</b><small>릴스로 둘러보기 ↗</small></span></a>`:''}<div class="links"><a href="${p.source}" target="_blank">관광지 정보 ↗</a><a href="${p.map}" target="_blank">네이버 지도 ↗</a></div></div><div class="score"><strong>${score(p,sev,p.displayDistance)}</strong><small>추천도 / 100</small></div></article>`).join('');
       const topScore=list.length ? score(list[0],sev,list[0].displayDistance) : 0;
       list.forEach((p,i)=>{ const card=$('places').children[i]; if(card){ const current=score(p,sev,p.displayDistance); const meta=card.querySelector('.meta'); if(meta) meta.textContent=`${origin} 기준 ${p.displayDistance}km · 접근성 확인 완료`; const scoreBox=card.querySelector('.score'); if(scoreBox){ const rel=relativeRating(current,topScore); scoreBox.innerHTML=`<strong aria-label="상대 추천도 ${rel}점">${starMarkup(rel)}</strong><small>${rel.toFixed(1)} / 5.0</small>`; } }});
       $('routePanel').classList.toggle('route-panel-hidden', selected.size===0);
@@ -232,11 +232,6 @@
     })();
   </script>
   <style>
-    .map-link{position:fixed;right:18px;bottom:18px;z-index:150;display:inline-flex;align-items:center;gap:6px;padding:12px 16px;border-radius:999px;background:#0A74B0;color:#fff;text-decoration:none;font-size:14px;font-weight:800;box-shadow:0 5px 12px rgba(10,116,176,.24)}
-    .map-link:hover{background:#075A88;transform:translateY(-1px)}
-    @media(max-width:800px){.map-link{right:12px;bottom:12px;padding:11px 13px;font-size:13px}}
-  </style>
-  <style>
     .nav{gap:18px}
     .nav-actions{display:flex;align-items:center;gap:18px;flex-shrink:0}
     .top-map-link{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 22px;border:2px solid #fff;border-radius:17px;color:#fff;background:#FF806B;font-size:16px;font-weight:800;text-decoration:none;white-space:nowrap;box-shadow:0 4px 0 #D96555,0 8px 16px rgba(10,74,100,.22);transition:background .2s,transform .2s}
@@ -244,9 +239,16 @@
     .top-map-link:focus-visible{outline:3px solid #FFF1DC;outline-offset:3px}
     @media(max-width:800px){.nav{gap:8px}.brand{font-size:18px}.brand-mark{width:29px;height:29px;font-size:16px}.nav-actions{gap:0}.top-map-link{min-height:44px;padding:0 12px;border-radius:14px;font-size:13px;box-shadow:0 3px 0 #D96555,0 6px 12px rgba(10,74,100,.18)}}
   </style>
-  <a class="map-link" href="#mapModal" id="mapOpen">🗺️ 지도·경로 보기</a>
   <div class="map-modal" id="mapModal" role="dialog" aria-modal="true" aria-label="지도와 경로" hidden><div class="map-modal-head"><strong>🗺️ 지도·경로</strong><button id="mapClose" type="button" aria-label="지도 닫기">✕</button></div><iframe src="map.html?v=ko2" title="부산 지도와 경로"></iframe></div>
   <style>.map-modal{position:fixed;inset:5vh 5vw;z-index:200;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(22,68,90,.35);overflow:hidden}.map-modal-head{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#16445A;border-bottom:1px solid #DDF7FA}.map-modal-head button{border:0;background:#FFF1DC;color:#16445A;border-radius:10px;padding:8px 11px;cursor:pointer;font-weight:800}.map-modal iframe{width:100%;height:calc(100% - 52px);border:0}.map-modal::backdrop{background:rgba(22,68,90,.45)}@media(max-width:800px){.map-modal{inset:2vh 2vw;border-radius:15px}}</style>
-  <script>(function(){const opens=document.querySelectorAll('#mapOpen,#mapOpenTop'),modal=document.getElementById('mapModal'),close=document.getElementById('mapClose'),frame=modal?.querySelector('iframe');if(!opens.length||!modal||!frame)return;opens.forEach(open=>open.addEventListener('click',e=>{e.preventDefault();frame.src='map.html?updated='+Date.now();modal.hidden=false;document.body.style.overflow='hidden';close.focus()}));close.addEventListener('click',()=>{modal.hidden=true;document.body.style.overflow='';frame.src='about:blank'})})();</script>
+  <style>
+    .place-reel{display:flex;align-items:center;gap:10px;max-width:390px;margin-top:14px;padding:8px 11px 8px 8px;border:1px solid #B9E5E9;border-radius:16px;background:#F1FBFC;color:#16445A;text-decoration:none;box-shadow:0 4px 11px rgba(10,116,176,.08);transition:transform .2s,box-shadow .2s}
+    .place-reel:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(10,116,176,.14)}
+    .reel-images{display:flex;width:86px;height:60px;overflow:hidden;flex:0 0 86px;border-radius:10px;background:#0A74B0}
+    .reel-images img{width:50%;height:100%;object-fit:cover}.place-reel b{display:block;font-size:12px;line-height:1.35}.place-reel small{display:block;margin-top:3px;color:#0A74B0;font-size:11px;font-weight:800}
+    .place-reel:focus-visible{outline:3px solid #4ECDC4;outline-offset:3px}
+    @media(max-width:800px){.place-reel{max-width:none}.reel-images{width:96px;height:64px;flex-basis:96px}}
+  </style>
+  <script>(function(){const opens=document.querySelectorAll('#mapOpenTop'),modal=document.getElementById('mapModal'),close=document.getElementById('mapClose'),frame=modal?.querySelector('iframe');if(!opens.length||!modal||!frame)return;opens.forEach(open=>open.addEventListener('click',e=>{e.preventDefault();frame.src='map.html?updated='+Date.now();modal.hidden=false;document.body.style.overflow='hidden';close.focus()}));close.addEventListener('click',()=>{modal.hidden=true;document.body.style.overflow='';frame.src='about:blank'})})();</script>
 </body>
 </html>
