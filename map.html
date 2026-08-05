@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>휠웨이 부산 | 지도</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root{--blue:#0A74B0;--turquoise:#16B8C4;--ink:#16445A;--coral:#FF806B}
+    *{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Arial,'Noto Sans KR',sans-serif;color:var(--ink)}
+    #map{width:100%;height:100%}.toolbar{position:fixed;z-index:1000;top:16px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:none}.toolbar>*{pointer-events:auto}.title{background:#fff;border-radius:16px;padding:11px 15px;box-shadow:0 5px 16px #16445a25;font-weight:800}.locate{border:0;border-radius:14px;padding:12px 15px;background:var(--coral);color:#fff;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #d96555}.locate:focus{outline:3px solid #16B8C466;outline-offset:2px}.status{position:fixed;z-index:1000;bottom:18px;left:18px;right:18px;background:#fff;max-width:420px;border-radius:14px;padding:10px 13px;box-shadow:0 5px 16px #16445a22;font-size:13px}.leaflet-popup-content{line-height:1.6}
+    .title{position:fixed;right:18px;bottom:18px;z-index:1001}
+    .locate{position:fixed;top:16px;right:16px;z-index:1001}
+    @media(max-width:700px){.title{right:12px;bottom:12px;font-size:13px;padding:9px 12px}}
+  </style>
+</head>
+<body>
+  <style>.route-box{position:fixed;z-index:1000;top:74px;left:16px;width:min(360px,calc(100% - 32px));background:#fff;border-radius:16px;padding:12px;box-shadow:0 5px 16px #16445a25}.route-box input{width:100%;padding:10px;border:1px solid #c9e8ec;border-radius:10px;margin:4px 0;color:var(--ink)}.route-btn{width:100%;border:0;border-radius:11px;padding:10px;background:var(--blue);color:#fff;font-weight:800;cursor:pointer;margin-top:5px}</style>
+  <div class="route-box" aria-label="경로 입력" lang="ko"><input id="start" type="text" lang="ko" inputmode="text" autocomplete="off" placeholder="출발지 (예: 부산역)"><input id="end" type="text" lang="ko" inputmode="text" autocomplete="off" placeholder="도착지 (예: SEA LIFE 부산아쿠아리움)"><button class="route-btn" id="routeBtn">경로 보기</button></div>
+  <div class="toolbar"><div class="title">♿ 휠웨이 부산 지도</div><button class="locate" id="locate">현재 위치 사용</button></div>
+  <div id="map" aria-label="부산 무장애 관광 지도"></div>
+  <div class="status" id="status" role="status">지도를 불러왔습니다. 현재 위치 사용 버튼을 눌러보세요.</div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const busan=[35.1587,129.1604];
+    const map=L.map('map').setView(busan,12);
+    map.setMaxBounds([[32,123],[44,132.5]]);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    L.control.scale({imperial:true,metric:true}).addTo(map);
+    const places=[
+      ['SEA LIFE 부산아쿠아리움',35.1601,129.1602,'https://www.visitsealife.com/busan/'],
+      ['송도해수욕장·스카이워크',35.0762,129.0177,'https://www.busan.go.kr/'],
+      ['국립수산과학관',35.3227,129.2464,'https://www.sci.or.kr/'],
+      ['태종대 유원지',35.0516,129.0877,'https://www.bisco.or.kr/taejongdae/'],
+      ['더베이101',35.1569,129.1529,'https://www.thebay101yacht.com/']
+    ];
+    places.forEach(([name,lat,lng,site])=>L.marker([lat,lng]).addTo(map).bindPopup(`<b>${name}</b><br><a href="${site}" target="_blank" rel="noopener">공식 사이트 열기</a>`));
+    let marker,accuracyCircle,watchId,routeLine;
+    const status=document.getElementById('status');
+    document.getElementById('routeBtn').addEventListener('click',async()=>{const start=document.getElementById('start').value.trim(),end=document.getElementById('end').value.trim();if(!start||!end){status.textContent='출발지와 도착지를 입력해주세요.';return;}status.textContent='경로를 계산하는 중입니다...';try{const [a,b]=await Promise.all([geocode(start),geocode(end)]);if(!a||!b)throw new Error('place');const routeUrls=[`https://router.project-osrm.org/route/v1/driving/${a.lon},${a.lat};${b.lon},${b.lat}?overview=full&geometries=geojson`,`https://routing.openstreetmap.de/routed-car/route/v1/driving/${a.lon},${a.lat};${b.lon},${b.lat}?overview=full&geometries=geojson`];let data=null;for(const u of routeUrls){try{const res=await fetch(u);if(res.ok){const candidate=await res.json();if(candidate.code==='Ok'){data=candidate;break;}}}catch(_){} }if(!data)throw new Error('route');if(routeLine)map.removeLayer(routeLine);routeLine=L.geoJSON(data.routes[0].geometry,{style:{color:'#FF806B',weight:6,opacity:.85}}).addTo(map);map.fitBounds(routeLine.getBounds(),{padding:[40,40]});status.textContent=`${start} → ${end} · 약 ${(data.routes[0].distance/1000).toFixed(1)}km · ${Math.round(data.routes[0].duration/60)}분`;}catch(e){status.textContent=e.message==='place'?'입력한 장소의 좌표를 찾지 못했습니다.':'경로 서버가 응답하지 않습니다. 잠시 후 다시 시도해주세요.';}});
+    const stations={'부산역':{lat:35.1151,lon:129.0414},'서면역':{lat:35.1579,lon:129.0595},'해운대역':{lat:35.1631,lon:129.1588},'남포역':{lat:35.0979,lon:129.0345},'센텀시티역':{lat:35.1690,lon:129.1324},'광안역':{lat:35.1532,lon:129.1187}};
+    async function geocode(query){const normalized=query.toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');const key=query.replace(/역?\s*$/,'역');if(stations[query])return stations[query];if(stations[key])return stations[key];const aliases=[['sealife부산아쿠아리움',['sealife','씨라이프','아쿠아리움'],{lat:35.1601,lon:129.1602}],['송도해수욕장',['송도해수욕장','송도스카이워크','송도'],{lat:35.0762,lon:129.0177}],['태종대',['태종대','태종대유원지'],{lat:35.0516,lon:129.0877}],['더베이101',['더베이101','더베이','thebay101'],{lat:35.1569,lon:129.1529}],['국립수산과학관',['국립수산과학관','수산과학관'],{lat:35.3227,lon:129.2464}],['부산역',['부산역','부산'],{lat:35.1151,lon:129.0414}],['서면역',['서면역','서면'],{lat:35.1579,lon:129.0595}],['해운대역',['해운대역','해운대'],{lat:35.1631,lon:129.1588}],['남포역',['남포역','남포동'],{lat:35.0979,lon:129.0345}]];const found=aliases.find(([,words])=>words.some(w=>normalized.includes(w.replace(/[^\p{L}\p{N}]/gu,''))));if(found)return found[2];const data=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&accept-language=ko&limit=1&countrycodes=kr&q='+encodeURIComponent(query),{headers:{Accept:'application/json'}}).then(r=>r.json());return data[0]?{lat:Number(data[0].lat),lon:Number(data[0].lon)}:null;}
+    document.getElementById('locate').addEventListener('click',async()=>{
+      try{if(navigator.permissions){const permission=await navigator.permissions.query({name:'geolocation'});if(permission.state==='denied'){showPermissionHelp();return;}}}catch(_){/* permissions API 미지원 브라우저는 아래 요청을 직접 실행 */}
+      if(!navigator.geolocation){status.textContent='이 브라우저는 위치 기능을 지원하지 않습니다.';return;}
+      status.textContent='위치 권한을 요청하는 중입니다...';
+      map.locate({setView:true,maxZoom:16,watch:true,enableHighAccuracy:true,maximumAge:5000,timeout:10000});
+      return;
+      if(watchId!==undefined) navigator.geolocation.clearWatch(watchId);
+      watchId=navigator.geolocation.watchPosition(pos=>{
+        const here=[pos.coords.latitude,pos.coords.longitude];
+        if(!marker) marker=L.marker(here).addTo(map).bindPopup('현재 위치'); else marker.setLatLng(here);
+        marker.openPopup();map.setView(here,15);status.textContent=`현재 위치: ${here[0].toFixed(5)}, ${here[1].toFixed(5)}`;
+      },err=>{status.textContent=err.code===1?'위치 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.':'현재 위치를 가져오지 못했습니다.';},{enableHighAccuracy:true,maximumAge:5000,timeout:10000});
+    });
+    function showPermissionHelp(){status.innerHTML='위치 권한이 차단되어 있습니다. 주소창 왼쪽의 <b>사이트 정보/자물쇠 아이콘</b> → <b>위치</b> → <b>허용</b>으로 변경한 뒤 아래 버튼을 누르세요.<br><button type="button" id="retryLocation" style="margin-top:7px;border:0;border-radius:8px;padding:7px 10px;background:#0A74B0;color:#fff;font-weight:700;cursor:pointer">권한 변경 후 다시 시도</button>';document.getElementById('retryLocation').addEventListener('click',()=>document.getElementById('locate').click());}
+    map.on('locationfound',e=>{if(marker)map.removeLayer(marker);if(accuracyCircle)map.removeLayer(accuracyCircle);marker=L.marker(e.latlng).addTo(map).bindPopup(`현재 위치 · 오차 범위 약 ${Math.round(e.accuracy)}m`).openPopup();accuracyCircle=L.circle(e.latlng,e.accuracy,{color:'#16B8C4',fillColor:'#16B8C4',fillOpacity:.15}).addTo(map);status.textContent=`현재 위치를 반영했습니다. 오차 범위 약 ${Math.round(e.accuracy)}m`;});
+    map.on('locationerror',e=>{status.textContent=e.message||'현재 위치를 가져오지 못했습니다.';});
+  </script>
+</body>
+</html>

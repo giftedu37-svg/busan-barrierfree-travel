@@ -203,9 +203,41 @@
     if (brand) brand.textContent = '휠웨이 부산';
   </script>
   <style>.site-url{margin-top:7px;font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere}.site-url a{color:#075A88}</style>
+  <style>
+    .starfish-corner{position:fixed;top:14px;right:14px;width:104px;height:104px;background:#fff;border:3px solid #0A74B0;border-radius:50%;box-shadow:0 10px 24px rgba(22,68,90,.2);overflow:hidden;z-index:50;padding:5px}
+    .starfish-corner img{width:100%;height:100%;display:block}
+    @media (max-width:700px){.starfish-corner{top:8px;right:8px;width:72px;height:72px;border-width:2px;padding:3px}}
+  </style>
+  <div class="starfish-corner" aria-label="불가사리 일러스트"><img src="starfish.svg" alt="불가사리 그림"></div>
   <script>
     const siteObserver=new MutationObserver(()=>document.querySelectorAll('#places .card').forEach(card=>{if(card.querySelector('.site-url'))return;const link=card.querySelector('.links a[href]');if(!link)return;const row=document.createElement('div');row.className='site-url';row.innerHTML='사이트: <a href="'+link.href+'" target="_blank" rel="noopener">'+link.href+'</a>';card.querySelector('.links')?.appendChild(row);}));
     siteObserver.observe(document.getElementById('places'),{childList:true});
   </script>
+  <style>
+    /* Hero refresh: ocean, accessible movement, and a friendly wheel-wave sticker. */
+    header{background:linear-gradient(135deg,#0A74B0 0%,#16B8C4 68%,#45B99A 100%);color:#fff}
+    .nav{min-height:78px}.brand{display:flex;align-items:center;gap:10px;color:#fff;font-size:22px}.brand-mark{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fff;color:#0A74B0;box-shadow:0 4px 10px rgba(10,50,70,.18);font-size:20px}.tag{color:#E6F4F9;font-weight:600}
+    .hero{padding:62px 0 92px;background:linear-gradient(135deg,#DDF7FA 0%,#B8EFF2 54%,#FFF1DC 100%);color:#16445A}
+    .hero-inner{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(260px,.92fr);align-items:center;gap:42px;position:relative;z-index:1}.hero-copy{min-width:0}.hero .eyebrow{color:#0A74B0;font-size:13px;letter-spacing:.14em}.hero h1{font-size:clamp(38px,5.5vw,64px);line-height:1.16;margin:14px 0 18px;color:#16445A;text-shadow:none}.hero p{max-width:520px;color:#315F70;font-size:17px;line-height:1.7}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.hero-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 20px;border-radius:17px;font-weight:800;text-decoration:none}.hero-primary{background:#FF806B;color:#fff;box-shadow:0 5px 0 #D96555}.hero-secondary{background:#fff;color:#0A74B0;border:2px solid #16B8C4}.hero-sticker{justify-self:end;width:min(100%,370px);aspect-ratio:1.15;display:grid;place-items:center;border-radius:42% 58% 52% 48%/48% 42% 58% 52%;background:rgba(255,255,255,.72);box-shadow:0 18px 30px rgba(10,116,176,.16);border:3px solid rgba(22,184,196,.35)}.hero-sticker svg{width:82%;height:82%}.hero-wave{position:absolute;left:-5%;right:-5%;bottom:-60px;height:125px;background:#FAFCFF;border-radius:50% 50% 0 0/100% 100% 0 0;box-shadow:0 -10px 24px rgba(10,116,176,.07)}
+    .hero-wave{display:none!important}
+    @media(max-width:800px){.hero{padding:42px 0 76px}.hero-inner{grid-template-columns:1fr;gap:22px}.hero-sticker{justify-self:center;width:min(78vw,280px);order:2}.hero h1{font-size:clamp(34px,10vw,50px)}.hero p{font-size:16px}.hero-actions a{flex:1 1 100%;min-height:50px}.tag{display:none}}
+  </style>
+  <script>
+    (function(){
+      const brand=document.querySelector('.brand'); if(brand) brand.innerHTML='<span class="brand-mark" aria-hidden="true">♿⌁</span><span>휠웨이 부산</span>';
+      const tag=document.querySelector('.tag'); if(tag) tag.textContent='바다로 가는 가장 편한 길';
+      const hero=document.querySelector('.hero'); if(!hero) return;
+      hero.innerHTML='<div class="shell hero-inner"><div class="hero-copy"><div class="eyebrow">ACCESSIBLE OCEAN TRAVEL</div><h1>모두가 갈 수 있는<br>부산의 바다</h1><p>휠체어 이용자를 위한 부산 해양관광 이동 안내</p><div class="hero-actions"><a class="hero-primary" href="#places">휠체어 이동 경로 찾기</a><a class="hero-secondary" href="#places">접근 가능한 바다 찾기</a></div></div><div class="hero-sticker" aria-label="휠체어 바퀴와 파도가 연결된 접근 가능한 바다 일러스트"><svg viewBox="0 0 320 260" role="img"><defs><linearGradient id="oceanSticker" x1="0" x2="1"><stop stop-color="#16B8C4"/><stop offset="1" stop-color="#45B99A"/></linearGradient></defs><path d="M22 178c44-28 82-28 126 0s82 28 150 0v53H22z" fill="url(#oceanSticker)"/><path d="M22 178c44-28 82-28 126 0s82 28 150 0" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><circle cx="127" cy="120" r="54" fill="none" stroke="#16445A" stroke-width="14"/><circle cx="127" cy="120" r="10" fill="#FF806B"/><path d="M127 66c19 0 34 7 45 21M172 87l22 2-12 18" fill="none" stroke="#16445A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M177 137c-8 24-28 42-55 45" fill="none" stroke="#FF806B" stroke-width="12" stroke-linecap="round"/></svg></div><div class="hero-wave" aria-hidden="true"></div></div>';
+    })();
+  </script>
+  <style>
+    .map-link{position:fixed;right:18px;top:78px;z-index:40;display:inline-flex;align-items:center;gap:6px;padding:11px 15px;border-radius:999px;background:#0A74B0;color:#fff;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 5px 12px rgba(10,116,176,.24)}
+    .map-link:hover{background:#075A88;transform:translateY(-1px)}
+    @media(max-width:800px){.map-link{right:12px;top:76px;padding:10px 12px;font-size:12px}}
+  </style>
+  <a class="map-link" href="#mapModal" id="mapOpen">🗺️ 지도·경로 보기</a>
+  <div class="map-modal" id="mapModal" role="dialog" aria-modal="true" aria-label="지도와 경로" hidden><div class="map-modal-head"><strong>🗺️ 지도·경로</strong><button id="mapClose" type="button" aria-label="지도 닫기">✕</button></div><iframe src="map.html?v=ko2" title="부산 지도와 경로"></iframe></div>
+  <style>.map-modal{position:fixed;inset:5vh 5vw;z-index:200;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(22,68,90,.35);overflow:hidden}.map-modal-head{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#16445A;border-bottom:1px solid #DDF7FA}.map-modal-head button{border:0;background:#FFF1DC;color:#16445A;border-radius:10px;padding:8px 11px;cursor:pointer;font-weight:800}.map-modal iframe{width:100%;height:calc(100% - 52px);border:0}.map-modal::backdrop{background:rgba(22,68,90,.45)}@media(max-width:800px){.map-modal{inset:2vh 2vw;border-radius:15px}}</style>
+  <script>(function(){const open=document.getElementById('mapOpen'),modal=document.getElementById('mapModal'),close=document.getElementById('mapClose'),frame=modal?.querySelector('iframe');if(!open||!modal||!frame)return;open.addEventListener('click',e=>{e.preventDefault();frame.src='map.html?updated='+Date.now();modal.hidden=false;document.body.style.overflow='hidden';close.focus()});close.addEventListener('click',()=>{modal.hidden=true;document.body.style.overflow='';frame.src='about:blank'})})();</script>
 </body>
 </html>
