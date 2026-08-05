@@ -237,11 +237,12 @@
     @media(max-width:800px){.map-link{right:12px;bottom:12px;padding:11px 13px;font-size:13px}}
   </style>
   <style>
-    .nav-actions{display:flex;align-items:center;gap:18px}
-    .top-map-link{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:2px solid rgba(255,255,255,.82);border-radius:14px;color:#fff;background:rgba(255,255,255,.15);font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap;transition:background .2s,transform .2s}
-    .top-map-link:hover{background:#fff;color:#0A74B0;transform:translateY(-1px)}
+    .nav{gap:18px}
+    .nav-actions{display:flex;align-items:center;gap:18px;flex-shrink:0}
+    .top-map-link{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 22px;border:2px solid #fff;border-radius:17px;color:#fff;background:#FF806B;font-size:16px;font-weight:800;text-decoration:none;white-space:nowrap;box-shadow:0 4px 0 #D96555,0 8px 16px rgba(10,74,100,.22);transition:background .2s,transform .2s}
+    .top-map-link:hover{background:#F36D59;color:#fff;transform:translateY(-2px)}
     .top-map-link:focus-visible{outline:3px solid #FFF1DC;outline-offset:3px}
-    @media(max-width:800px){.nav-actions{gap:0}.top-map-link{min-height:38px;padding:0 10px;border-radius:12px;font-size:12px}}
+    @media(max-width:800px){.nav{gap:8px}.brand{font-size:18px}.brand-mark{width:29px;height:29px;font-size:16px}.nav-actions{gap:0}.top-map-link{min-height:44px;padding:0 12px;border-radius:14px;font-size:13px;box-shadow:0 3px 0 #D96555,0 6px 12px rgba(10,74,100,.18)}}
   </style>
   <a class="map-link" href="#mapModal" id="mapOpen">🗺️ 지도·경로 보기</a>
   <div class="map-modal" id="mapModal" role="dialog" aria-modal="true" aria-label="지도와 경로" hidden><div class="map-modal-head"><strong>🗺️ 지도·경로</strong><button id="mapClose" type="button" aria-label="지도 닫기">✕</button></div><iframe src="map.html?v=ko2" title="부산 지도와 경로"></iframe></div>
