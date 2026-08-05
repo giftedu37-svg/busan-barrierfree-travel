@@ -231,9 +231,9 @@
     })();
   </script>
   <style>
-    .map-link{position:fixed;right:18px;top:78px;z-index:40;display:inline-flex;align-items:center;gap:6px;padding:11px 15px;border-radius:999px;background:#0A74B0;color:#fff;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 5px 12px rgba(10,116,176,.24)}
+    .map-link{position:fixed;right:18px;bottom:18px;z-index:150;display:inline-flex;align-items:center;gap:6px;padding:12px 16px;border-radius:999px;background:#0A74B0;color:#fff;text-decoration:none;font-size:14px;font-weight:800;box-shadow:0 5px 12px rgba(10,116,176,.24)}
     .map-link:hover{background:#075A88;transform:translateY(-1px)}
-    @media(max-width:800px){.map-link{right:12px;top:76px;padding:10px 12px;font-size:12px}}
+    @media(max-width:800px){.map-link{right:12px;bottom:12px;padding:11px 13px;font-size:13px}}
   </style>
   <a class="map-link" href="#mapModal" id="mapOpen">🗺️ 지도·경로 보기</a>
   <div class="map-modal" id="mapModal" role="dialog" aria-modal="true" aria-label="지도와 경로" hidden><div class="map-modal-head"><strong>🗺️ 지도·경로</strong><button id="mapClose" type="button" aria-label="지도 닫기">✕</button></div><iframe src="map.html?v=ko2" title="부산 지도와 경로"></iframe></div>
